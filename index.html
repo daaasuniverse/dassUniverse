@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Samuell Daaas — Cantor e compositor brasileiro. K-POP × BR-POP.">
+  <meta name="theme-color" content="#274690">
+  <title>Samuell Daaas — Oficial</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <canvas id="stars-canvas"></canvas>
+
+  <nav class="nav">
+    <a href="#hero" class="nav-logo">
+      <svg viewBox="0 0 120 60" width="48" height="24" fill="none">
+        <text x="0" y="50" font-family="'Nazegul','Montserrat',sans-serif" font-weight="normal" font-size="56" fill="#E6DED1" letter-spacing="2">SD</text>
+      </svg>
+    </a>
+    <div class="nav-links">
+      <a href="#hero">Início</a>
+      <a href="#tracks">Músicas</a>
+      <a href="#videos">Vídeos</a>
+      <a href="#shows">Agenda</a>
+      <a href="#about">Sobre</a>
+      <a href="#contact">Contato</a>
+    </div>
+    <button class="nav-burger" id="nav-burger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#hero">Início</a>
+    <a href="#tracks">Músicas</a>
+    <a href="#videos">Vídeos</a>
+    <a href="#shows">Agenda</a>
+    <a href="#about">Sobre</a>
+    <a href="#contact">Contato</a>
+  </div>
+
+  <section class="hero" id="hero">
+    <div id="hero-bg" class="hero-bg-placeholder"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-vignette"></div>
+
+    <div class="hero-content">
+      <div class="hero-title-wrap">
+        <img src="img/amuleto1.png" alt="" class="amulet amulet-left">
+        <h1 class="hero-title">SAMUELL<br>DAAAS</h1>
+        <img src="img/amuleto2.png" alt="" class="amulet amulet-right">
+      </div>
+      <div class="hero-tag" id="hero-tagline">K-POP × BR-POP</div>
+      <p class="hero-highlight" id="hero-highlight"></p>
+      <div class="hero-buttons">
+        <a class="btn-primary" id="btn-spotify" href="#" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          Spotify
+        </a>
+        <a class="btn-outline" id="btn-ytmusic" href="#" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228 18.228 15.432 18.228 12 15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z"/></svg>
+          YouTube Music
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tracks" data-reveal>
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-label">Discografia</span>
+        <h2 class="section-title">MÚSICAS</h2>
+      </div>
+      <div id="tracks-list"></div>
+    </div>
+  </section>
+
+  <section class="section" id="videos" data-reveal>
+    <div class="section-inner wide">
+      <div class="section-header">
+        <span class="section-label">Audiovisual</span>
+        <h2 class="section-title">VÍDEOS</h2>
+      </div>
+      <div class="videos-grid" id="videos-grid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="shows" data-reveal>
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-label">Ao vivo</span>
+        <h2 class="section-title">AGENDA</h2>
+      </div>
+      <div id="shows-list"></div>
+    </div>
+  </section>
+
+  <section class="section" id="about" data-reveal>
+    <div class="section-inner narrow">
+      <div class="section-header">
+        <span class="section-label">Conheça</span>
+        <h2 class="section-title">SOBRE MIM</h2>
+      </div>
+      <div class="about-box">
+        <span class="about-watermark">SD</span>
+        <div id="bio-text"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact-section" id="contact" data-reveal>
+    <div class="section-inner contact-w">
+      <div class="section-header">
+        <span class="section-label">Conecte-se</span>
+        <h2 class="section-title">CONTATO</h2>
+      </div>
+
+      <div class="socials-row">
+        <a class="social-icon" id="social-ig" href="#" target="_blank" rel="noopener noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a class="social-icon" id="social-fb" href="#" target="_blank" rel="noopener noreferrer" title="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+        <a class="social-icon" id="social-tw" href="#" target="_blank" rel="noopener noreferrer" title="X">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a class="social-icon" id="social-tt" href="#" target="_blank" rel="noopener noreferrer" title="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.75a8.18 8.18 0 004.76 1.52V6.84a4.84 4.84 0 01-1-.15z"/></svg>
+        </a>
+        <a class="social-icon" id="social-tg" href="#" target="_blank" rel="noopener noreferrer" title="Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+      </div>
+
+      <form class="contact-form" action="https://formsubmit.co/daaasuniverse@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Nova mensagem via site — Samuell Daaas">
+        <input type="hidden" name="_captcha" value="true">
+        <input type="hidden" name="_template" value="box">
+        <input type="hidden" name="_next" value="https://www.samuelldaaas.com.br/#contact">
+        <input type="text" name="_honey" style="display:none">
+
+        <div class="form-group">
+          <label class="form-label" for="f-name">Seu nome</label>
+          <input class="form-input" type="text" name="nome" id="f-name" placeholder="Como você se chama?" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-email">Seu e-mail</label>
+          <input class="form-input" type="email" name="email" id="f-email" placeholder="seuemail@exemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-message">Mensagem</label>
+          <textarea class="form-textarea" name="mensagem" id="f-message" placeholder="Escreva sua mensagem..." required></textarea>
+        </div>
+        <button class="form-submit" type="submit">Enviar Mensagem</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <svg viewBox="0 0 120 60" width="36" height="18" fill="none">
+      <text x="0" y="50" font-family="'Nazegul','Montserrat',sans-serif" font-weight="normal" font-size="56" fill="rgba(230,222,209,0.25)" letter-spacing="2">SD</text>
+    </svg>
+    <p>&copy; 2025 DAAAS UNIVERSE. TODOS OS DIREITOS RESERVADOS.</p>
+  </footer>
+
+  <script src="js/stars.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>
