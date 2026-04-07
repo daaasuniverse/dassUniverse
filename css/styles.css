@@ -199,6 +199,17 @@ img { display: block; max-width: 100%; }
   line-height: 0.9;
   color: var(--off-white);
   text-shadow: 0 4px 40px rgba(10,10,15,0.7), 0 0 80px rgba(39,70,144,0.25);
+  text-align: center;
+}
+
+.title-top {
+  display: block;
+  letter-spacing: 0.02em;
+}
+
+.title-bottom {
+  display: block;
+  letter-spacing: 0.28em;
 }
 
 .hero-title-wrap {
