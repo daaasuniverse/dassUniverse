@@ -208,8 +208,9 @@ img { display: block; max-width: 100%; }
 }
 
 .title-bottom {
-  display: block;
-  letter-spacing: 0.28em;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .hero-title-wrap {
