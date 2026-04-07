@@ -1,6 +1,52 @@
-/* admin.js v5 — Salvar = commit direto no GitHub */
 (function(){
 'use strict';
+
+/* ═══ LOGIN ═══ */
+var PASS_KEY='sd-admin-pass';
+var SESSION_KEY='sd-admin-session';
+var DEFAULT_PASS='daaas2025';
+
+function getPass(){
+  try{return localStorage.getItem(PASS_KEY)||DEFAULT_PASS}catch(e){return DEFAULT_PASS}
+}
+function setPass(p){
+  try{localStorage.setItem(PASS_KEY,p)}catch(e){}
+}
+function isLoggedIn(){
+  try{return sessionStorage.getItem(SESSION_KEY)==='1'}catch(e){return false}
+}
+function setLoggedIn(){
+  try{sessionStorage.setItem(SESSION_KEY,'1')}catch(e){}
+}
+
+var loginScreen=document.getElementById('login-screen');
+var adminWrap=document.getElementById('admin-wrap');
+
+if(isLoggedIn()){
+  loginScreen.style.display='none';
+  adminWrap.style.display='';
+}
+
+document.getElementById('login-btn').addEventListener('click',tryLogin);
+document.getElementById('login-pass').addEventListener('keydown',function(e){
+  if(e.key==='Enter')tryLogin();
+});
+
+function tryLogin(){
+  var val=document.getElementById('login-pass').value;
+  var err=document.getElementById('login-error');
+  if(val===getPass()){
+    setLoggedIn();
+    loginScreen.style.display='none';
+    adminWrap.style.display='';
+  }else{
+    err.textContent='Senha incorreta';
+    document.getElementById('login-pass').value='';
+    document.getElementById('login-pass').focus();
+  }
+}
+
+/* ═══ ADMIN ═══ */
 
 var data={};
 var cur='destaque';
@@ -347,7 +393,18 @@ function rConfig(){
     '<input class="inp" id="c-token" type="password" value="'+esc(ghConfig.token)+'" placeholder="ghp_xxxxxxxxxxxx">'+
     '<label class="lbl">Branch</label>'+
     '<input class="inp" id="c-branch" value="'+esc(ghConfig.branch||'main')+'" placeholder="main">'+
-    '<button class="add" id="c-save" style="margin-top:22px">Salvar Configuração</button>';
+    '<button class="add" id="c-save" style="margin-top:22px">Salvar Configuração do GitHub</button>'+
+
+    '<div class="sec-t" style="margin-top:40px">Senha do Painel</div>'+
+    '<p class="desc" style="margin-bottom:12px">Troque a senha de acesso ao painel admin. A senha atual é necessária para confirmar.</p>'+
+    '<label class="lbl">Senha atual</label>'+
+    '<input class="inp" id="c-oldpass" type="password" placeholder="Digite a senha atual">'+
+    '<label class="lbl">Nova senha</label>'+
+    '<input class="inp" id="c-newpass" type="password" placeholder="Digite a nova senha">'+
+    '<label class="lbl">Confirmar nova senha</label>'+
+    '<input class="inp" id="c-newpass2" type="password" placeholder="Repita a nova senha">'+
+    '<div class="login-error" id="pass-error" style="margin-top:8px"></div>'+
+    '<button class="add" id="c-passave" style="margin-top:12px">Trocar Senha</button>';
 
   document.getElementById('c-save').addEventListener('click',function(){
     ghConfig.owner=document.getElementById('c-owner').value.trim();
@@ -357,6 +414,26 @@ function rConfig(){
     saveGHConfig();
     rConfig();
     showStatus('Configuração salva!','ok');
+  });
+
+  document.getElementById('c-passave').addEventListener('click',function(){
+    var errEl=document.getElementById('pass-error');
+    var old=document.getElementById('c-oldpass').value;
+    var n1=document.getElementById('c-newpass').value;
+    var n2=document.getElementById('c-newpass2').value;
+    errEl.textContent='';
+
+    if(old!==getPass()){errEl.textContent='Senha atual incorreta.';return}
+    if(!n1||n1.length<4){errEl.textContent='A nova senha deve ter pelo menos 4 caracteres.';return}
+    if(n1!==n2){errEl.textContent='As senhas não coincidem.';return}
+
+    setPass(n1);
+    document.getElementById('c-oldpass').value='';
+    document.getElementById('c-newpass').value='';
+    document.getElementById('c-newpass2').value='';
+    errEl.style.color='#4ade80';
+    errEl.textContent='Senha alterada com sucesso!';
+    setTimeout(function(){errEl.textContent='';errEl.style.color=''},2500);
   });
 }
 
