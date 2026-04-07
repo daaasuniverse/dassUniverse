@@ -150,6 +150,8 @@ function showModal(title,fields,onConfirm,confirmLabel){
       html+='</select>';
     }else if(f.type==='textarea'){
       html+='<textarea class="txa" id="m-'+f.key+'" placeholder="'+esc(f.placeholder||'')+'">'+esc(f.value||'')+'</textarea>';
+    }else if(f.type==='file'){
+      html+='<input class="inp" id="m-'+f.key+'" type="file" accept="image/*" style="padding:10px">';
     }else{
       html+='<input class="inp" id="m-'+f.key+'" type="'+(f.type||'text')+'" value="'+esc(f.value||'')+'" placeholder="'+esc(f.placeholder||'')+'">';
     }
@@ -160,13 +162,21 @@ function showModal(title,fields,onConfirm,confirmLabel){
   modalRoot.innerHTML=html;
   var ov=document.getElementById('modal-overlay');
   requestAnimationFrame(function(){ov.classList.add('show')});
-  var first=ov.querySelector('.inp,.txa,.inp-select');
+  var first=ov.querySelector('.inp:not([type=file]),.txa,.inp-select');
   if(first)setTimeout(function(){first.focus()},100);
   function close(){ov.classList.remove('show');setTimeout(function(){modalRoot.innerHTML=''},200)}
   document.getElementById('m-cancel').addEventListener('click',close);
   ov.addEventListener('click',function(e){if(e.target===ov)close()});
   document.getElementById('m-confirm').addEventListener('click',function(){
-    var vals={};fields.forEach(function(f){var el=document.getElementById('m-'+f.key);vals[f.key]=el?el.value.trim():''});
+    var vals={};
+    fields.forEach(function(f){
+      var el=document.getElementById('m-'+f.key);
+      if(f.type==='file'){
+        vals[f.key]=el&&el.files&&el.files[0]?el.files[0]:null;
+      }else{
+        vals[f.key]=el?el.value.trim():'';
+      }
+    });
     onConfirm(vals,close,document.getElementById('m-status'),this);
   });
 }
@@ -185,6 +195,7 @@ function render(){
     case'faixas':rFaixas();break;
     case'videos':rVideos();break;
     case'agenda':rAgenda();break;
+    case'galeria':rGaleria();break;
     case'sobre':rSobre();break;
     case'links':rLinks();break;
     case'config':rConfig();break;
@@ -322,6 +333,101 @@ function rAgenda(){
       {key:'venue',label:'Local',placeholder:'Nome do local'},
       {key:'city',label:'Cidade',placeholder:'Cidade / Estado'}
     ],function(v,close){if(!v.date||!v.venue)return;data.shows.push({id:'s'+Date.now(),date:v.date,venue:v.venue,city:v.city||''});close();rAgenda()},'Adicionar');
+  });
+}
+
+function rGaleria(){
+  var el=document.getElementById('p-galeria');
+  if(!data.gallery) data.gallery=[];
+  var h='<h3>Galeria</h3><p class="desc">Adicione fotos usando URLs de imagem (Imgur, Google Drive, Instagram, etc). A seção só aparece no site quando tiver pelo menos uma foto.</p>';
+
+  data.gallery.forEach(function(item){
+    h+='<div class="row"><div class="row-l">'+
+      '<div style="width:48px;height:48px;border-radius:8px;overflow:hidden;flex-shrink:0;border:1px solid rgba(39,70,144,.12)">'+
+      '<img src="'+esc(item.url)+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'+
+      '<div class="row-info"><div class="row-t">'+esc(item.caption||'Sem legenda')+'</div>'+
+      '<div class="row-s" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(item.url)+'</div></div></div>'+
+      '<div class="row-actions"><button class="edit-btn" data-id="'+item.id+'">Editar</button>'+
+      '<button class="rm" data-id="'+item.id+'">Remover</button></div></div>';
+  });
+  h+='<button class="add" id="add-gallery">+ Adicionar Foto</button>';
+  el.innerHTML=h;
+  bindRemove(el,'gallery',rGaleria);
+
+  el.querySelectorAll('.edit-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var item=data.gallery.find(function(g){return g.id===b.dataset.id});if(!item)return;
+      showModal('Editar Foto',[
+        {key:'url',label:'URL da imagem',value:item.url,placeholder:'Cole o link da imagem'},
+        {key:'caption',label:'Legenda (opcional)',value:item.caption||'',placeholder:'Descrição da foto'}
+      ],function(v,close){if(!v.url)return;item.url=v.url;item.caption=v.caption||'';close();rGaleria()},'Salvar');
+    });
+  });
+
+  document.getElementById('add-gallery').addEventListener('click',function(){
+    showModal('Adicionar Foto',[
+      {key:'file',label:'Enviar foto do computador',type:'file'},
+      {key:'url',label:'Ou cole uma URL de imagem',placeholder:'https://exemplo.com/foto.jpg'},
+      {key:'caption',label:'Legenda (opcional)',placeholder:'Descrição da foto'}
+    ],function(v,close,statusEl,confirmBtn){
+      var caption=v.caption||'';
+
+      if(v.file){
+        if(!ghConfig.owner||!ghConfig.repo||!ghConfig.token){
+          statusEl.textContent='Configure o GitHub na aba ⚙ Config para enviar fotos.';
+          return;
+        }
+        statusEl.textContent='Enviando foto pro repositório...';
+        confirmBtn.disabled=true;
+
+        var fileName='gallery_'+Date.now()+'.'+v.file.name.split('.').pop().toLowerCase();
+        var reader=new FileReader();
+        reader.onload=function(){
+          var base64=reader.result.split(',')[1];
+          var apiUrl='https://api.github.com/repos/'+ghConfig.owner+'/'+ghConfig.repo+'/contents/img/gallery/'+fileName;
+
+          fetch(apiUrl,{
+            method:'PUT',
+            headers:{
+              'Authorization':'Bearer '+ghConfig.token,
+              'Accept':'application/vnd.github.v3+json',
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+              message:'Adicionar foto: '+fileName,
+              content:base64,
+              branch:ghConfig.branch
+            })
+          })
+          .then(function(r){
+            if(!r.ok)throw new Error('HTTP '+r.status);
+            return r.json();
+          })
+          .then(function(res){
+            var imgUrl='https://'+ghConfig.owner+'.github.io/'+ghConfig.repo+'/img/gallery/'+fileName;
+            if(ghConfig.repo.indexOf('.github.io')!==-1) imgUrl='https://'+ghConfig.owner+'.github.io/img/gallery/'+fileName;
+            data.gallery.push({id:'g'+Date.now(),url:imgUrl,caption:caption});
+            close();rGaleria();
+            showStatus('Foto enviada!','ok');
+          })
+          .catch(function(e){
+            console.error(e);
+            statusEl.textContent='Erro ao enviar. Verifique as configurações do GitHub.';
+            confirmBtn.disabled=false;
+          });
+        };
+        reader.readAsDataURL(v.file);
+        return;
+      }
+
+      if(v.url){
+        data.gallery.push({id:'g'+Date.now(),url:v.url,caption:caption});
+        close();rGaleria();
+        return;
+      }
+
+      statusEl.textContent='Selecione uma foto ou cole uma URL.';
+    },'Adicionar');
   });
 }
 

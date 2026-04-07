@@ -77,6 +77,34 @@ function render(data){
     }).join('');
   }
 
+  var galleryEl=document.getElementById('gallery-grid');
+  if(galleryEl && data.gallery && data.gallery.length){
+    galleryEl.innerHTML=data.gallery.map(function(g){
+      return '<div class="gallery-item" data-src="'+esc(g.url)+'">'+
+        '<img src="'+esc(g.url)+'" alt="'+esc(g.caption||'')+'" loading="lazy">'+
+        (g.caption?'<div class="gallery-caption">'+esc(g.caption)+'</div>':'')+
+        '</div>';
+    }).join('');
+
+    galleryEl.querySelectorAll('.gallery-item').forEach(function(item){
+      item.addEventListener('click',function(){
+        var src=this.dataset.src;
+        var lb=document.createElement('div');
+        lb.className='gallery-lightbox';
+        lb.innerHTML='<img src="'+src+'">';
+        lb.addEventListener('click',function(){
+          lb.classList.remove('show');
+          setTimeout(function(){lb.remove()},300);
+        });
+        document.body.appendChild(lb);
+        requestAnimationFrame(function(){lb.classList.add('show')});
+      });
+    });
+  } else if(galleryEl){
+    var galSection=document.getElementById('gallery');
+    if(galSection) galSection.style.display='none';
+  }
+
   var bioEl=document.getElementById('bio-text');
   if(bioEl){
     bioEl.innerHTML=data.bio.split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>'}).join('');

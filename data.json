@@ -5,40 +5,15 @@
   "heroMediaType": "image",
   "bio": "Sou Samuell Daaas, cantor e compositor brasileiro que transforma emoções em música. Minha identidade artística mistura a energia vibrante do k-pop com a alma e o swing do br-pop, funk, R&B e reggaetón, criando um som moderno, internacional e cheio de personalidade.\n\nVim do interior de Minas Gerais, mas carrego no meu trabalho a visão de que a arte pode atravessar fronteiras. Minha cor é o azul royal profundo, símbolo da intensidade e confiança que coloco em cada projeto, e meu amuleto é o gato, representando liberdade, elegância e mistério — traços que também estão na minha música.\n\nMinhas canções falam sobre amor, sonhos, aceitação, empoderamento e autodescoberta, com letras sinceras e melodias que conectam culturas. Quero que quem ouça minha música sinta que está vivendo uma história única, como se fosse parte dela.\n\nEstou no começo de uma jornada que ainda vai me levar a muitos palcos e corações pelo mundo. E você é parte desse caminho.",
   "tracks": [
-    {
-      "id": "t1",
-      "title": "Em breve",
-      "status": "Em breve",
-      "link": ""
-    },
-    {
-      "id": "t2",
-      "title": "Em breve",
-      "status": "Em breve",
-      "link": ""
-    }
+    { "id": "t1", "title": "Confusão", "status": "Disponível", "link": "" },
+    { "id": "t2", "title": "S.Q.S.", "status": "Em breve", "link": "" }
   ],
   "videos": [
-    {
-      "id": "v1",
-      "title": "Samuell Daaas - Confusão (Video Oficial)",
-      "youtubeId": "EY2FBXz3uDc",
-      "thumbnail": "https://i.ytimg.com/vi/EY2FBXz3uDc/hqdefault.jpg"
-    },
-    {
-      "id": "v2",
-      "title": "Samuell Daaas - Regular (Video Oficial)",
-      "youtubeId": "wE7SsqqM7l0",
-      "thumbnail": "https://i.ytimg.com/vi/wE7SsqqM7l0/hqdefault.jpg"
-    }
+    { "id": "v1", "title": "", "youtubeId": "EY2FBXz3uDc", "thumbnail": "" },
+    { "id": "v2", "title": "", "youtubeId": "wE7SsqqM7l0", "thumbnail": "" }
   ],
   "shows": [
-    {
-      "id": "s1",
-      "date": "Em breve",
-      "venue": "Novos shows sendo confirmados",
-      "city": "Acompanhe as redes sociais"
-    }
+    { "id": "s1", "date": "Em breve", "venue": "Novos shows sendo confirmados", "city": "Acompanhe as redes sociais" }
   ],
   "socials": {
     "instagram": "https://www.instagram.com/samuell.daaas",
@@ -51,5 +26,6 @@
     "spotify": "https://open.spotify.com/artist/3YsVJzuKalcuGy9ginkMz3",
     "youtubeMusic": "https://music.youtube.com/channel/UC2REzsyzqnXrGqGpY3vd8kQ"
   },
-  "contact": "daaasuniverse@gmail.com"
+  "contact": "daaasuniverse@gmail.com",
+  "gallery": []
 }
