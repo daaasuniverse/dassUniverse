@@ -1,7 +1,6 @@
 (function(){
 'use strict';
 
-/* ═══ LOGIN ═══ */
 var PASS_KEY='sd-admin-pass';
 var SESSION_KEY='sd-admin-session';
 var DEFAULT_PASS='daaas2025';
@@ -21,6 +20,9 @@ function setLoggedIn(){
 
 var loginScreen=document.getElementById('login-screen');
 var adminWrap=document.getElementById('admin-wrap');
+
+loginScreen.style.display='';
+adminWrap.style.display='none';
 
 if(isLoggedIn()){
   loginScreen.style.display='none';
@@ -46,8 +48,6 @@ function tryLogin(){
   }
 }
 
-/* ═══ ADMIN ═══ */
-
 var data={};
 var cur='destaque';
 var modalRoot=document.getElementById('modal-root');
@@ -56,7 +56,6 @@ var CONFIG_KEY='sd-admin-github';
 
 function esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
 
-// Load GitHub config from localStorage (only config, not site data)
 function loadGHConfig(){
   try{var r=localStorage.getItem(CONFIG_KEY);if(r)ghConfig=JSON.parse(r)}catch(e){}
 }
@@ -65,7 +64,6 @@ function saveGHConfig(){
 }
 loadGHConfig();
 
-/* ═══ LOAD data.json ═══ */
 fetch('../data.json')
   .then(function(r){return r.json()})
   .then(function(d){
@@ -83,7 +81,6 @@ fetch('../data.json')
   .then(function(){render()})
   .catch(function(e){console.error('Erro ao carregar data.json',e)});
 
-/* ═══ SAVE TO GITHUB ═══ */
 function showStatus(msg, type){
   var el=document.getElementById('saved');
   el.textContent=msg;
@@ -105,14 +102,12 @@ document.getElementById('btn-save').addEventListener('click',function(){
   var content=btoa(unescape(encodeURIComponent(json)));
   var apiUrl='https://api.github.com/repos/'+ghConfig.owner+'/'+ghConfig.repo+'/contents/data.json';
 
-  // First get current file SHA (needed for update)
   fetch(apiUrl+'?ref='+ghConfig.branch,{
     headers:{'Authorization':'Bearer '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}
   })
   .then(function(r){return r.json()})
   .then(function(file){
     var sha=file.sha||'';
-    // PUT to update file
     return fetch(apiUrl,{
       method:'PUT',
       headers:{
@@ -144,7 +139,6 @@ document.getElementById('btn-save').addEventListener('click',function(){
   });
 });
 
-/* ═══ MODAL ═══ */
 function showModal(title,fields,onConfirm,confirmLabel){
   confirmLabel=confirmLabel||'Confirmar';
   var html='<div class="modal-bg" id="modal-overlay"><div class="modal"><h4>'+esc(title)+'</h4>';
@@ -177,7 +171,6 @@ function showModal(title,fields,onConfirm,confirmLabel){
   });
 }
 
-/* ═══ TABS ═══ */
 document.getElementById('tabs').addEventListener('click',function(e){
   var btn=e.target.closest('.tab-btn');if(!btn)return;
   cur=btn.dataset.t;
@@ -186,7 +179,6 @@ document.getElementById('tabs').addEventListener('click',function(e){
   render();
 });
 
-/* ═══ RENDER ═══ */
 function render(){
   switch(cur){
     case'destaque':rDestaque();break;
@@ -199,7 +191,6 @@ function render(){
   }
 }
 
-/* ── Destaque ── */
 function rDestaque(){
   var el=document.getElementById('p-destaque');
   var prev='';
@@ -225,7 +216,6 @@ function rDestaque(){
   el.querySelectorAll('.type-btn').forEach(function(b){b.addEventListener('click',function(){data.heroMediaType=this.dataset.v;rDestaque()})});
 }
 
-/* ── Faixas ── */
 function rFaixas(){
   var el=document.getElementById('p-faixas');
   var h='<h3>Faixas</h3><p class="desc">Todas as faixas aparecem no site. Faixas disponíveis podem ter um link pro ouvinte.</p>';
@@ -259,7 +249,6 @@ function rFaixas(){
   });
 }
 
-/* ── Vídeos ── */
 function rVideos(){
   var el=document.getElementById('p-videos');
   var h='<h3>Vídeos</h3><p class="desc">Adicione vídeos do YouTube. O título e thumbnail são buscados automaticamente.</p>';
@@ -305,7 +294,6 @@ function rVideos(){
   });
 }
 
-/* ── Agenda ── */
 function rAgenda(){
   var el=document.getElementById('p-agenda');
   var h='<h3>Agenda</h3><p class="desc">Adicione datas de shows e eventos.</p>';
@@ -337,7 +325,6 @@ function rAgenda(){
   });
 }
 
-/* ── Sobre ── */
 function rSobre(){
   var el=document.getElementById('p-sobre');
   el.innerHTML='<h3>Sobre Mim</h3><p class="desc">Sua biografia na seção "Sobre" do site.</p>'+
@@ -345,7 +332,6 @@ function rSobre(){
   el.querySelector('#i-bio').addEventListener('input',function(){data.bio=this.value});
 }
 
-/* ── Links ── */
 function rLinks(){
   var el=document.getElementById('p-links');
   var h='<h3>Links e Contato</h3><p class="desc">Edite suas redes sociais, plataformas e e-mail.</p>'+
@@ -365,7 +351,6 @@ function rLinks(){
   el.querySelectorAll('.plat').forEach(function(i){i.addEventListener('input',function(){data.platforms[this.dataset.k]=this.value})});
 }
 
-/* ── Config GitHub ── */
 function rConfig(){
   var el=document.getElementById('p-config');
   var connected=ghConfig.owner&&ghConfig.repo&&ghConfig.token;
@@ -437,7 +422,6 @@ function rConfig(){
   });
 }
 
-/* ── Remove with modal ── */
 function bindRemove(el,sec,renderFn){
   el.querySelectorAll('.rm').forEach(function(b){
     b.addEventListener('click',function(){

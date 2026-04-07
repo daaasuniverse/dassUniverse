@@ -1,11 +1,7 @@
-/* ═══════════════════════════════════════════════════
-   stars.js — Animated star field + scroll reveal
-   ═══════════════════════════════════════════════════ */
-
 (function () {
   'use strict';
 
-  /* ─── STARS ─── */
+  
   const canvas = document.getElementById('stars-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -55,7 +51,6 @@
     ctx.clearRect(0, 0, w, h);
     frame++;
 
-    // Stars
     for (const s of stars) {
       s.o = s.baseO + Math.sin(frame * s.speed + s.phase) * s.baseO * 0.6;
       ctx.beginPath();
@@ -64,7 +59,6 @@
       ctx.fill();
     }
 
-    // Shooting stars
     maybeShoot();
     for (let i = shootingStars.length - 1; i >= 0; i--) {
       const ss = shootingStars[i];
@@ -105,8 +99,7 @@
     }, 200);
   });
 
-
-  /* ─── SCROLL REVEAL ─── */
+  
   const reveals = document.querySelectorAll('[data-reveal]');
   if (reveals.length) {
     const observer = new IntersectionObserver(function (entries) {

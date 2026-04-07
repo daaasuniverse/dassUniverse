@@ -1,4 +1,3 @@
-/* site.js — Lê data.json e renderiza o site */
 (function(){
 'use strict';
 
@@ -6,7 +5,6 @@ function esc(s){var d=document.createElement('div');d.textContent=s||'';return d
 function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v||''}
 function setHref(id,v){var e=document.getElementById(id);if(e)e.href=v||'#'}
 
-/* Fetch YouTube title+thumb for videos missing them */
 function fetchYT(videos){
   var need=videos.filter(function(v){return !v.title});
   if(!need.length)return Promise.resolve();
@@ -19,7 +17,6 @@ function fetchYT(videos){
 }
 
 function render(data){
-  // Hero bg
   var heroBg=document.getElementById('hero-bg');
   if(heroBg){
     if(data.heroMedia){
@@ -41,7 +38,6 @@ function render(data){
   setHref('btn-spotify',data.platforms.spotify);
   setHref('btn-ytmusic',data.platforms.youtubeMusic);
 
-  // Tracks
   var tracksEl=document.getElementById('tracks-list');
   if(tracksEl){
     tracksEl.innerHTML=data.tracks.map(function(t,i){
@@ -58,7 +54,6 @@ function render(data){
     }).join('');
   }
 
-  // Videos
   var vidsEl=document.getElementById('videos-grid');
   if(vidsEl){
     vidsEl.innerHTML=data.videos.map(function(v){
@@ -72,7 +67,6 @@ function render(data){
     }).join('');
   }
 
-  // Shows
   var showsEl=document.getElementById('shows-list');
   if(showsEl){
     showsEl.innerHTML=data.shows.map(function(s){
@@ -83,13 +77,11 @@ function render(data){
     }).join('');
   }
 
-  // Bio
   var bioEl=document.getElementById('bio-text');
   if(bioEl){
     bioEl.innerHTML=data.bio.split('\n\n').map(function(p){return '<p>'+esc(p)+'</p>'}).join('');
   }
 
-  // Socials
   setHref('social-ig',data.socials.instagram);
   setHref('social-fb',data.socials.facebook);
   setHref('social-tw',data.socials.twitter);
@@ -97,7 +89,6 @@ function render(data){
   setHref('social-tg',data.socials.telegram);
 }
 
-/* Nav scroll */
 var nav=document.querySelector('.nav');
 if(nav){
   window.addEventListener('scroll',function(){
@@ -105,7 +96,6 @@ if(nav){
   });
 }
 
-/* Mobile menu */
 var burger=document.getElementById('nav-burger');
 var mm=document.getElementById('mobile-menu');
 if(burger&&mm){
@@ -123,7 +113,6 @@ if(burger&&mm){
   });
 }
 
-/* Init: fetch data.json → fetch YT info → render */
 fetch('data.json')
   .then(function(r){return r.json()})
   .then(function(data){
