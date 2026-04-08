@@ -1,16 +1,17 @@
 (function(){
 'use strict';
 
-var PASS_KEY='sd-admin-pass';
 var SESSION_KEY='sd-admin-session';
-var DEFAULT_PASS='daaas2025';
+var DEFAULT_HASH='40817fff0a3f16374c70326e5ce45c43c1b19012131a897166d0cd5ed4306c83';
+var currentHash='';
 
-function getPass(){
-  try{return localStorage.getItem(PASS_KEY)||DEFAULT_PASS}catch(e){return DEFAULT_PASS}
+function sha256(str){
+  var buf=new TextEncoder().encode(str);
+  return crypto.subtle.digest('SHA-256',buf).then(function(h){
+    return Array.from(new Uint8Array(h)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+  });
 }
-function setPass(p){
-  try{localStorage.setItem(PASS_KEY,p)}catch(e){}
-}
+
 function isLoggedIn(){
   try{return sessionStorage.getItem(SESSION_KEY)==='1'}catch(e){return false}
 }
@@ -37,15 +38,17 @@ document.getElementById('login-pass').addEventListener('keydown',function(e){
 function tryLogin(){
   var val=document.getElementById('login-pass').value;
   var err=document.getElementById('login-error');
-  if(val===getPass()){
-    setLoggedIn();
-    loginScreen.style.display='none';
-    adminWrap.style.display='';
-  }else{
-    err.textContent='Senha incorreta';
-    document.getElementById('login-pass').value='';
-    document.getElementById('login-pass').focus();
-  }
+  sha256(val).then(function(hash){
+    if(hash===currentHash||(!currentHash&&hash===DEFAULT_HASH)){
+      setLoggedIn();
+      loginScreen.style.display='none';
+      adminWrap.style.display='';
+    }else{
+      err.textContent='Senha incorreta';
+      document.getElementById('login-pass').value='';
+      document.getElementById('login-pass').focus();
+    }
+  });
 }
 
 var data={};
@@ -68,6 +71,7 @@ fetch('../data.json')
   .then(function(r){return r.json()})
   .then(function(d){
     data=d;
+    if(data.adminPass) currentHash=data.adminPass;
     var need=data.videos.filter(function(v){return !v.title});
     if(need.length){
       return Promise.all(need.map(function(v){
@@ -514,17 +518,25 @@ function rConfig(){
     var n2=document.getElementById('c-newpass2').value;
     errEl.textContent='';
 
-    if(old!==getPass()){errEl.textContent='Senha atual incorreta.';return}
     if(!n1||n1.length<4){errEl.textContent='A nova senha deve ter pelo menos 4 caracteres.';return}
     if(n1!==n2){errEl.textContent='As senhas não coincidem.';return}
 
-    setPass(n1);
-    document.getElementById('c-oldpass').value='';
-    document.getElementById('c-newpass').value='';
-    document.getElementById('c-newpass2').value='';
-    errEl.style.color='#4ade80';
-    errEl.textContent='Senha alterada com sucesso!';
-    setTimeout(function(){errEl.textContent='';errEl.style.color=''},2500);
+    sha256(old).then(function(oldHash){
+      if(oldHash!==currentHash&&!(! currentHash&&oldHash===DEFAULT_HASH)){
+        errEl.textContent='Senha atual incorreta.';
+        return;
+      }
+      sha256(n1).then(function(newHash){
+        data.adminPass=newHash;
+        currentHash=newHash;
+        document.getElementById('c-oldpass').value='';
+        document.getElementById('c-newpass').value='';
+        document.getElementById('c-newpass2').value='';
+        errEl.style.color='#4ade80';
+        errEl.textContent='Senha alterada! Clique em Salvar para aplicar.';
+        setTimeout(function(){errEl.textContent='';errEl.style.color=''},3000);
+      });
+    });
   });
 }
 
