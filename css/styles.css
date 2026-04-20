@@ -232,7 +232,7 @@ img { display: block; max-width: 100%; }
   top: 50%;
   transform: translateY(-50%) rotate(-8deg);
   animation: swayLeft 4s ease-in-out infinite;
-  opacity: 0.4;
+  opacity: 0.8;
 }
 
 .amulet-right {
@@ -240,7 +240,7 @@ img { display: block; max-width: 100%; }
   top: 50%;
   transform: translateY(-50%) rotate(8deg);
   animation: swayRight 4.5s ease-in-out infinite;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 @keyframes swayLeft {
